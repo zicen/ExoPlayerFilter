@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.daasuu.epf.filter.AlphaFrameFilter;
 import com.daasuu.epf.filter.GlBilateralFilter;
 import com.daasuu.epf.filter.GlBoxBlurFilter;
 import com.daasuu.epf.filter.GlBrightnessFilter;
@@ -58,6 +59,7 @@ import java.util.List;
 
 public enum FilterType {
     DEFAULT,
+    ALPHA,
     BITMAP_OVERLAY_SAMPLE,
     BILATERAL_BLUR,
     BOX_BLUR,
@@ -165,6 +167,8 @@ public enum FilterType {
         switch (filterType) {
             case DEFAULT:
                 return new GlFilter();
+            case ALPHA:
+                return new AlphaFrameFilter();
             case BILATERAL_BLUR:
                 return new GlBilateralFilter();
             case BOX_BLUR:

@@ -124,9 +124,10 @@ public class MainActivity extends AppCompatActivity {
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "yourApplicationName"));
 
         // This is the MediaSource representing the media to be played.
+        // MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+        //         .createMediaSource(Uri.parse(Constant.STREAM_URL_MP4_VOD_SHORT));
         MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse(Constant.STREAM_URL_MP4_VOD_SHORT));
-
+                .createMediaSource(Uri.parse("asset:///cyprinus.mp4"));
         // SimpleExoPlayer
         player = ExoPlayerFactory.newSimpleInstance(this);
         // Prepare the player with the source.
