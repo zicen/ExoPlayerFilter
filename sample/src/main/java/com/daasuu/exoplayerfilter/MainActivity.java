@@ -40,7 +40,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpViews();
+        initClick();
 
+    }
+
+    private void initClick() {
+        findViewById(R.id.btnFitWidth).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ePlayerView.setPlayerScaleType(PlayerScaleType.RESIZE_FIT_WIDTH);
+            }
+        });
+
+        findViewById(R.id.btnFitNone).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ePlayerView.setPlayerScaleType(PlayerScaleType.RESIZE_NONE);
+            }
+        });
     }
 
     @Override
