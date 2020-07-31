@@ -13,6 +13,8 @@ import android.widget.SeekBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.daasuu.epf.EPlayerView;
+import com.daasuu.epf.PlayerScaleType;
+import com.daasuu.epf.filter.AlphaFrameFilter;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -139,10 +141,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUoGlPlayerView() {
         ePlayerView = new EPlayerView(this);
+        ePlayerView.setPlayerScaleType(PlayerScaleType.RESIZE_NONE);
         ePlayerView.setSimpleExoPlayer(player);
-        ePlayerView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        ePlayerView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         ((MovieWrapperView) findViewById(R.id.layout_movie_wrapper)).addView(ePlayerView);
         ePlayerView.onResume();
+        ePlayerView.setGlFilter(new AlphaFrameFilter());
     }
 
 

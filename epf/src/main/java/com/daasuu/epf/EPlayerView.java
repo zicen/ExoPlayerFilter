@@ -1,11 +1,14 @@
 package com.daasuu.epf;
 
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.daasuu.epf.chooser.EConfigChooser;
 import com.daasuu.epf.contextfactory.EContextFactory;
+import com.daasuu.epf.filter.AlphaFrameFilter;
 import com.daasuu.epf.filter.GlFilter;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.video.VideoListener;
@@ -33,6 +36,15 @@ public class EPlayerView extends GLSurfaceView implements VideoListener {
         setEGLContextFactory(new EContextFactory());
         setEGLConfigChooser(new EConfigChooser());
 
+        /**
+         * 这里是不是可加可不加的？干嘛用的？
+         */
+        setZOrderOnTop(true);
+        setZOrderMediaOverlay(true);
+        setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        getHolder().setFormat(PixelFormat.RGBA_8888);
+
+
         renderer = new EPlayerRenderer(this);
         setRenderer(renderer);
 
@@ -49,8 +61,11 @@ public class EPlayerView extends GLSurfaceView implements VideoListener {
         return this;
     }
 
+    private GlFilter filter = null;
     public void setGlFilter(GlFilter glFilter) {
         renderer.setGlFilter(glFilter);
+        filter = glFilter;
+        requestLayout();
     }
 
     public void setPlayerScaleType(PlayerScaleType playerScaleType) {
@@ -73,11 +88,23 @@ public class EPlayerView extends GLSurfaceView implements VideoListener {
                 viewHeight = (int) (measuredWidth / videoAspect);
                 break;
             case RESIZE_FIT_HEIGHT:
-                viewWidth = (int) (measuredHeight * videoAspect);
+                if (filter != null && filter instanceof AlphaFrameFilter) {
+                    viewWidth = (int) (measuredWidth * videoAspect / 2);
+                } else {
+                    viewWidth = (int) (measuredWidth * videoAspect);
+                }
+                break;
+            default:
+                viewHeight = (int) (measuredWidth / videoAspect);
+                if (filter != null && filter instanceof AlphaFrameFilter) {
+                    viewWidth = (int) (measuredWidth * videoAspect / 2);
+                } else {
+                    viewWidth = (int) (measuredWidth * videoAspect);
+                }
                 break;
         }
 
-        // Log.d(TAG, "onMeasure viewWidth = " + viewWidth + " viewHeight = " + viewHeight);
+        Log.d(TAG, "onMeasure viewWidth = " + viewWidth + " viewHeight = " + viewHeight);
 
         setMeasuredDimension(viewWidth, viewHeight);
 
@@ -94,9 +121,9 @@ public class EPlayerView extends GLSurfaceView implements VideoListener {
 
     @Override
     public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-        // Log.d(TAG, "width = " + width + " height = " + height + " unappliedRotationDegrees = " + unappliedRotationDegrees + " pixelWidthHeightRatio = " + pixelWidthHeightRatio);
+        Log.d(TAG, "width = " + width + " height = " + height + " unappliedRotationDegrees = " + unappliedRotationDegrees + " pixelWidthHeightRatio = " + pixelWidthHeightRatio);
         videoAspect = ((float) width / height) * pixelWidthHeightRatio;
-        // Log.d(TAG, "videoAspect = " + videoAspect);
+        Log.d(TAG, "videoAspect = " + videoAspect);
         requestLayout();
     }
 
